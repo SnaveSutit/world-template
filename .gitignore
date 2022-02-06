@@ -1,1 +1,14 @@
 world/datapacks/*
+world/advancements
+world/datapacks/
+world/data/raids.dat
+world/poi/
+world/DIM-1/
+world/DIM1/
+world/stats/
+world/level.dat_old
+world/session.lock
+world/playerdata/
+
+datapack/.mcproject/CROSS_RUN.json
+datapack/data/
