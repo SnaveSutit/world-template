@@ -1,3 +1,6 @@
+.temp/
+dist/
+
 world/datapacks/*
 world/advancements
 world/datapacks/
