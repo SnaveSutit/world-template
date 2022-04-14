@@ -18,12 +18,17 @@ function getPath($name) {
 	}
 }
 
+$localDatapack = './world/datapacks/datapack'
 # Collect all link paths before doing anything to allow for cancellation
 $worldSymLink = getPath('world')
 $resourcePackSymLink = getPath('resourcepack')
 
+$localDatapackExists = Test-Path -Path $localDatapack
+
 Write-Host "Are you sure you want to create these new links?"
-Write-Host "- new simlink 'world/datapacks/datapack' to $(Join-Path -Path $repoDir -ChildPath 'datapack')"
+if (-not($localDatapackExists)) {
+	Write-Host "- new simlink 'world/datapacks/datapack' to $(Join-Path -Path $repoDir -ChildPath 'datapack')"
+}
 Write-Host "- new simlink '$($worldSymLink)' to $(Join-Path -Path $repoDir -ChildPath 'world')"
 Write-Host "- new simlink '$($resourcePackSymLink)' to $(Join-Path -Path $repoDir -ChildPath 'resources')"
 Read-Host -Prompt "Press Enter to Confirm"
@@ -33,8 +38,10 @@ New-Item -ItemType Directory -Path "./world/datapacks/" -Force
 New-Item -ItemType Directory -Path "./resources/assets/" -Force
 
 # Create data pack link inside of world
-Write-Host "Creating new simlink 'world/datapacks/datapack' to $(Join-Path -Path $repoDir -ChildPath 'datapack')"
-New-Item -ItemType SymbolicLink -Path "./world/datapacks/datapack" -Target "./datapack"
+if (-not($localDatapackExists)) {
+	Write-Host "Creating new simlink '$($localDatapack)' to $(Join-Path -Path $repoDir -ChildPath 'datapack')"
+	New-Item -ItemType SymbolicLink -Path $localDatapack -Target "./datapack"
+}
 # Create world symlink
 Write-Host "Creating new simlink '$($worldSymLink)' to $(Join-Path -Path $repoDir -ChildPath 'world')"
 New-Item -ItemType SymbolicLink -Path $worldSymLink -Target "./world"
