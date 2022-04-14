@@ -34,15 +34,15 @@ Remove-Item -Path './.temp/datapack/.mcproject/' -Recurse -Force | Out-Null
 Remove-Item -Path './.temp/datapack/config.js' -Recurse -Force | Out-Null
 Remove-Item -Path './.temp/datapack/config.json' -Recurse -Force | Out-Null
 # Clean up empty folders
-Get-ChildItem './.temp/datapack/' -Directory -Recurse | Where-Object { $_.GetFileSystemInfos().Count -eq 0}
+Get-ChildItem './.temp/datapack/' -Directory -Recurse | Where-Object { $_.GetFileSystemInfos().Count -eq 0} | Out-Null
 # Compress the cleaned data pack and output it
 7z a './dist/datapack.zip' './.temp/datapack/*'
 
 # Clean the resource pack of any dev material
 # Remove .ajmodels
-Get-ChildItem './.temp/resources/' -Include '*.ajmodel' -Recurse | Remove-Item
+Get-ChildItem './.temp/resources/' -Include '*.ajmodel' -Recurse | Remove-Item | Out-Null
 # Clean up empty folders
-Get-ChildItem './.temp/resources/' -Directory -Recurse | Where-Object { $_.GetFileSystemInfos().Count -eq 0}
+Get-ChildItem './.temp/resources/' -Directory -Recurse | Where-Object { $_.GetFileSystemInfos().Count -eq 0} | Out-Null
 # Compress the resource pack and output it
 7z a './dist/resources.zip' './.temp/resources/*'
 

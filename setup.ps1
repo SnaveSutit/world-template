@@ -34,17 +34,19 @@ Write-Host "- new simlink '$($resourcePackSymLink)' to $(Join-Path -Path $repoDi
 Read-Host -Prompt "Press Enter to Confirm"
 
 # Make empty directories that github ignores
-New-Item -ItemType Directory -Path "./world/datapacks/" -Force
-New-Item -ItemType Directory -Path "./resources/assets/" -Force
+New-Item -ItemType Directory -Path "./world/datapacks/" -Force | Out-Null
+New-Item -ItemType Directory -Path "./resources/assets/" -Force | Out-Null
 
 # Create data pack link inside of world
 if (-not($localDatapackExists)) {
 	Write-Host "Creating new simlink '$($localDatapack)' to $(Join-Path -Path $repoDir -ChildPath 'datapack')"
-	New-Item -ItemType SymbolicLink -Path $localDatapack -Target "./datapack"
+	New-Item -ItemType SymbolicLink -Path $localDatapack -Target "./datapack" | Out-Null
 }
 # Create world symlink
 Write-Host "Creating new simlink '$($worldSymLink)' to $(Join-Path -Path $repoDir -ChildPath 'world')"
-New-Item -ItemType SymbolicLink -Path $worldSymLink -Target "./world"
+New-Item -ItemType SymbolicLink -Path $worldSymLink -Target "./world" | Out-Null
 # Create resource pack symlink
 Write-Host "Creating new simlink '$($resourcePackSymLink)' to $(Join-Path -Path $repoDir -ChildPath 'resources')"
-New-Item -ItemType SymbolicLink -Path $resourcePackSymLink -Target "./resources"
+New-Item -ItemType SymbolicLink -Path $resourcePackSymLink -Target "./resources" | Out-Null
+
+Write-Host "Setup Complete!"
