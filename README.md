@@ -1,18 +1,16 @@
 # world-template
 An advanced Minecraft world template for map makers
 
-## Setup
+## OS Compatability - Symbolic Links
+This template is currently only compatible with Windows 10 and Windows 11.
+
+We take advantage of Window's Symbolic Links to allow us to store our world outside of the saves folder and give multiple Minecraft instances access to the world without using any complex folder syncing.
+
+## Setting up your world
 How to use this template for map development
 - Create a new repo using this template.
-- Setup a symbolic link to `world-template/datapack` in `world-template/world/datapacks/`
-- Setup a symbolic link to `world-template/resources` in your Minecraft `resourcepacks` folder
-- Setup a symbolic link to `world-template/world` in your Minecraft `saves` folder
-- Modify the `level.dat` file and change the level name to your map's name
-- Run `mcb` inside of the `repo/datapack` folder
-
-
-## Symbolic Links
-Sybolic links allow us to have a folder be used in two places at once without having to setup any complex folder syncing.
-
-Creating a Symbolic Link using powershell
-`new-item -ItemType SymbolicLink -Path "Link Name" -Target "Path to linked folder/file"`
+- Run the setup powershell script, and follow it's instructions.
+- Replace all mentions of `world-template` with your project's name.
+   - `./world/level.dat` -> `Data.LevelName`
+   - `./src/pack.mcmeta` -> `pack.description`
+- Update `./src/config.js` to use your information in the credit comment instead of mine.
