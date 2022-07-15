@@ -5,8 +5,8 @@ Add-Type -AssemblyName System.Windows.Forms
 function getPath($name) {
 	$browser = New-Object System.Windows.Forms.SaveFileDialog
 	$browser.InitialDirectory = $repoDir
-	$browser.Title = 'Select world save path'
-	$browser.FileName = "my_$($name)"
+	$browser.Title = "Select $name path"
+	$browser.FileName = "my_$name"
 
 	if ($browser.ShowDialog() -eq 'Ok') {
 		$return = $browser.FileName

@@ -1,4 +1,4 @@
-# TODO Add custom package names and versioning. Maybe using a simpel package.json?
+# TODO Add custom package names and versioning. Maybe using a simple package.json?
 
 # Use 7z because for some reason powershell's built-in compression causes corrupted zip files
 $7zipPath = "$env:programFiles\7-Zip\7z.exe"
