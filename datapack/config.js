@@ -1,6 +1,22 @@
+const { exec } = require('child_process')
+
 module.exports = {
 	global: {
-		onBuildSuccess: null,
+		onBuildSuccess: (build) => {
+			if (build) {
+				exec(
+					`.\\package.ps1"`,
+					{ shell: 'powershell.exe' },
+					(err, stdout, stderr) => {
+						if (err) {
+							console.error(err)
+							return
+						}
+						console.log(stdout)
+					}
+				)
+			}
+		},
 	},
 	mc: {
 		dev: true,
