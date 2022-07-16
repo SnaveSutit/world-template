@@ -4,8 +4,9 @@ module.exports = {
 	global: {
 		onBuildSuccess: (build) => {
 			if (build) {
+				console.log('Build: ', build)
 				exec(
-					`.\\package.ps1"`,
+					`".\\package.ps1"`,
 					{ shell: 'powershell.exe' },
 					(err, stdout, stderr) => {
 						if (err) {
