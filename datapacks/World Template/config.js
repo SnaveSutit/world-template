@@ -1,27 +1,22 @@
+/// <reference types="node"/>
 // ---------------------------------------------------------------------
 // This template script adds a few useful arguments to the mcbuild cli:
-// -package: Build and package the world, data pack, and resource pack.
+// -clean: Errases the data folder before building.
 // ---------------------------------------------------------------------
-
+const fs = require('fs')
 const { exec } = require('child_process')
 
 module.exports = {
 	global: {
-		onBuildSuccess: (build) => {
-			if (process.argv.includes('-package')) {
-				exec(
-					`.\\package.ps1`,
-					{ shell: 'powershell.exe', cwd: '..'},
-					(err, stdout, stderr) => {
-						if (err) {
-							console.error(err)
-							return
-						}
-						console.log(stdout)
-					}
-				)
+		preBuild: build => {
+			if (process.argv.includes('-clean')) {
+				try {
+					fs.rmSync('./data/', { recursive: true })
+				} catch (e) {}
+				fs.mkdirSync('./data/')
 			}
 		},
+		postBuild: build => {},
 	},
 	mc: {
 		dev: true,
