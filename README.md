@@ -1,16 +1,22 @@
 # world-template
 An advanced Minecraft world template for map makers
 
-## OS Compatability - Symbolic Links
-This template is currently only compatible with Windows 10 and Windows 11.
-
-We take advantage of Window's Symbolic Links to allow us to store our world outside of the saves folder and give multiple Minecraft instances access to the world without using any complex folder syncing.
+## OS Compatability
+This template *should* be compatible with Windows, Mac, and Linux. However I've only tested it on Windows 11
 
 ## Setting up your world
-How to use this template for map development
+How to initialize the template.
 - Create a new repo using this template.
-- Run the setup powershell script, and follow it's instructions.
-- Replace all mentions of `world-template` with your project's name.
-   - `./world/level.dat` -> `Data.LevelName`
-   - `./src/pack.mcmeta` -> `pack.description`
-- Update `./src/config.js` to use your information in the credit comment instead of mine.
+- Run `yarn` to install dependancies
+- Then setup the repo with `yarn setup`
+- Finally update `./src/config.js` to credit you instead of me.
+
+## Developing
+To enter development mode, change the terminal's working directory to one of the Data Packs and run `yarn dev`. This will start MC-Build in watch mode.
+
+You can also run `yarn build` to run a cleaning production build of your project.
+
+**NOTE:** The `build` command will erase the Data Pack's `data/` folder and re-construct it from the `src/` folder. Do not use it if you have files in `data/` that were not created using MC-Build.
+
+## Packaging
+If you run `yarn package` the packaging script will automatically clean, compile, combine and zip the world, Resource Pack, and Data Packs into the `dist/` folder.

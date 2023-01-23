@@ -5,7 +5,7 @@
 	"scripts": {
 		"package": "ts-node ./.tools/package.ts",
 		"setup": "ts-node ./.tools/setup.ts",
-		"dev": "mcb -offline -w-alt -debounce-time 100",
+		"dev": "mcb -w-alt -debounce-time 100",
 		"build": "mcb -offline -build -clean"
 	},
 	"devDependencies": {
