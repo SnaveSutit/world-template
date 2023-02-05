@@ -41,24 +41,32 @@ async function main() {
 	await fs.rm('./.temp/', { recursive: true }).catch(e => {})
 	await fs.mkdir('./.temp/', { recursive: true }).catch(e => {})
 	// Copy world, resource pack, and data pack into the .temp folder to prevent accidentally breaking things
-	await fs.cp('./world/', './.temp/world/', { recursive: true })
+	await fs.cp('./world/', `./.temp/${packageJson.projectName} World/`, { recursive: true })
 	await fs.cp('./resources/', './.temp/resources/', { recursive: true })
 	await fs.cp('./datapacks/', './.temp/datapacks/', { recursive: true })
 	// Remove datapacks link from copied world
-	await fs.unlink('./.temp/world/datapacks')
+	await fs.unlink(`./.temp/${packageJson.projectName} World/datapacks`)
 	// Perform a clean build of the data packs
+	await fs.mkdir('./dist/datapacks/', { recursive: true }).catch(e => {})
 	for (const dir of await fs.readdir('./.temp/datapacks/')) {
 		const path = pathjs.join(process.cwd(), '.temp/datapacks/', dir)
+		if (await fs.stat(path).then(s => s.isFile())) continue
 		// Make sure this is an MCB project
-		if (fs.access(pathjs.join(path, 'src/')).catch(e => true)) continue
-		execSync(`cd "${path}"; mcb -offline -build -clean`, { shell: 'powershell.exe' })
-		// Remove MC-Build project files
-		for (const item of ['src/', '.mcproject', 'config.js', 'config.json']) {
-			await fs.rm(pathjs.join(path, item), { recursive: true }).catch(e => {})
+		if (
+			await fs
+				.access(pathjs.join(path, 'src/'))
+				.then(() => true)
+				.catch(() => false)
+		) {
+			execSync(`cd "${path}"; mcb -offline -build -clean`, { shell: 'powershell.exe' })
+			// Remove MC-Build project files
+			for (const item of ['src/', '.mcproject', 'config.js', 'config.json']) {
+				await fs.rm(pathjs.join(path, item), { recursive: true }).catch(e => {})
+			}
 		}
 		await cleanupDirTree(path, '.ajmodel')
 		// Export compressed datapack to ./dist/datapacks/
-		_7z(`./dist/datapacks/${dir} Data Pack.zip`, pathjs.join(path, '*'))
+		_7z(`./dist/datapacks/${dir}.zip`, pathjs.join(path, '*'))
 	}
 	// Clean up resource pack
 	await cleanupDirTree('./.temp/resources/', '.ajmodel')
@@ -66,17 +74,19 @@ async function main() {
 	_7z(`./dist/${packageJson.projectName} Resource Pack.zip`, './.temp/resources/*')
 
 	// Copy the compiled and zipped data packs into the world
-	await fs.mkdir('./dist/datapacks/', { recursive: true })
-	await fs.cp('./dist/datapacks/', './.temp/world/datapacks/', { recursive: true })
+	await fs.cp('./dist/datapacks/', `./.temp/${packageJson.projectName} World/datapacks/`, { recursive: true })
 	// Copy the zipped resource pack into the world
-	await fs.cp(`./dist/${packageJson.projectName} Resource Pack.zip`, './.temp/world/resources.zip')
+	await fs.cp(
+		`./dist/${packageJson.projectName} Resource Pack.zip`,
+		`./.temp/${packageJson.projectName} World/resources.zip`
+	)
 	// Clean up the world
 	for (const item of ['advancements', 'playerdata', 'poi', 'stats', 'level.dat_old', 'session.lock']) {
-		await fs.rm(pathjs.join('./.temp/world/', item), { recursive: true }).catch(e => {})
+		await fs.rm(pathjs.join(`./.temp/${packageJson.projectName} World/`, item), { recursive: true }).catch(e => {})
 	}
-	await cleanupDirTree('./.temp/world', '.ajmodel')
+	await cleanupDirTree(`./.temp/${packageJson.projectName} World/`, '.ajmodel')
 	// Zip the world
-	_7z(`./dist/${packageJson.projectName}.zip`, './.temp/world/')
+	_7z(`./dist/${packageJson.projectName}.zip`, `./.temp/${packageJson.projectName} World/`)
 	// Remove .temp folder
 	await fs.rm('./.temp/', { recursive: true }).catch(e => {})
 }
