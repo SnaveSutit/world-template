@@ -49,6 +49,8 @@ async function main() {
 	// Perform a clean build of the data packs
 	for (const dir of await fs.readdir('./.temp/datapacks/')) {
 		const path = pathjs.join(process.cwd(), '.temp/datapacks/', dir)
+		// Make sure this is an MCB project
+		if (fs.access(pathjs.join(path, 'src/')).catch(e => true)) continue
 		execSync(`cd "${path}"; mcb -offline -build -clean`, { shell: 'powershell.exe' })
 		// Remove MC-Build project files
 		for (const item of ['src/', '.mcproject', 'config.js', 'config.json']) {
@@ -64,6 +66,7 @@ async function main() {
 	_7z(`./dist/${packageJson.projectName} Resource Pack.zip`, './.temp/resources/*')
 
 	// Copy the compiled and zipped data packs into the world
+	await fs.mkdir('./dist/datapacks/', { recursive: true })
 	await fs.cp('./dist/datapacks/', './.temp/world/datapacks/', { recursive: true })
 	// Copy the zipped resource pack into the world
 	await fs.cp(`./dist/${packageJson.projectName} Resource Pack.zip`, './.temp/world/resources.zip')
