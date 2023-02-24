@@ -4,24 +4,26 @@ An advanced Minecraft world template for map makers
 # OS Compatability
 This template is **only** compatible with Windows 10 and Windows 11 due to the use of Powershell. This may change in the future.
 
-# Installing Yarn
-Yarn is a Node package manager. You will need it to run the TypeScript files in this template.
-
-[You can download and install it here](https://classic.yarnpkg.com/lang/en/docs/install)
+# Requirements
+You must have these installed for this template's scripts to function properly.
+- [7zip](https://www.7-zip.org/)
+- [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [yarn](https://classic.yarnpkg.com/lang/en/docs/install) or [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 # Setting up your world
 How to initialize the template.
 - Create a new repo using this template.
-- Run `yarn` to install dependancies
-- Then setup the repo with `yarn setup`
-- Finally update `./src/config.js` to credit you instead of me.
+- Run `yarn install` to install dependancies.
+- Then setup the repo with `yarn setup`.
+
+## Creating a Data Pack
+You can create a brand-new Data Pack from a template via `yarn create_datapack`.
+
+## Adding other Data Packs
+If you have some pre-made Data Packs you'd like to include, Simply add them to the `datapacks` folder, and register them by running `yarn scan_datapacks`.
 
 # Developing
-To enter development mode, change the terminal's working directory to one of the Data Packs and run `yarn dev`. This will start MC-Build in watch mode.
-
-You can also run `yarn build` to run a cleaning production build of your project.
-
-**NOTE:** The `build` command will erase the Data Pack's `data/` folder and re-construct it from the `src/` folder. Do not use it if you have files in `data/` that were not created using MC-Build.
+You can run `yarn dev:datapack-id` to start MC-Build for a specific Data Pack.
 
 # Packaging
 If you run `yarn package` the packaging script will automatically clean, compile, combine and zip the world, Resource Pack, and Data Packs into the `dist/` folder.

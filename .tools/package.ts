@@ -5,6 +5,7 @@
 import * as pathjs from 'path'
 import * as fs from 'fs/promises'
 import { execSync } from 'child_process'
+import { terminal as term } from 'terminal-kit'
 
 function _7z(zip_name: string, target: string) {
 	execSync(
@@ -22,17 +23,16 @@ async function cleanupDirTree(base: string, ext: string) {
 			await cleanupDirTree(itemPath, ext)
 			if ((await fs.readdir(itemPath)).length === 0) {
 				await fs.rmdir(itemPath)
-				console.log(itemPath)
 			}
 		} else if (stat.isFile() && item.endsWith(ext)) {
-			console.log(itemPath)
 			await fs.unlink(itemPath)
-			// await removeEmptyParentDirs(pathjs.resolve(itemPath, '..'))
 		}
 	}
 }
 
 async function main() {
+	term.green('Packaging project...\n')
+
 	const packageJson = JSON.parse(await fs.readFile('./package.json', 'utf-8'))
 	// Erase contents of dist folder
 	await fs.rm('./dist/', { recursive: true }).catch(e => {})
@@ -45,7 +45,7 @@ async function main() {
 	await fs.cp('./resources/', './.temp/resources/', { recursive: true })
 	await fs.cp('./datapacks/', './.temp/datapacks/', { recursive: true })
 	// Remove datapacks link from copied world
-	await fs.unlink(`./.temp/${packageJson.projectName} World/datapacks`)
+	await fs.unlink(`./.temp/${packageJson.projectName} World/datapacks`).catch(e => {})
 	// Perform a clean build of the data packs
 	await fs.mkdir('./dist/datapacks/', { recursive: true }).catch(e => {})
 	for (const dir of await fs.readdir('./.temp/datapacks/')) {
@@ -74,21 +74,35 @@ async function main() {
 	_7z(`./dist/${packageJson.projectName} Resource Pack.zip`, './.temp/resources/*')
 
 	// Copy the compiled and zipped data packs into the world
-	await fs.cp('./dist/datapacks/', `./.temp/${packageJson.projectName} World/datapacks/`, { recursive: true })
+	await fs.cp('./dist/datapacks/', `./.temp/${packageJson.projectName} World/datapacks/`, {
+		recursive: true,
+	})
 	// Copy the zipped resource pack into the world
 	await fs.cp(
 		`./dist/${packageJson.projectName} Resource Pack.zip`,
 		`./.temp/${packageJson.projectName} World/resources.zip`
 	)
 	// Clean up the world
-	for (const item of ['advancements', 'playerdata', 'poi', 'stats', 'level.dat_old', 'session.lock']) {
-		await fs.rm(pathjs.join(`./.temp/${packageJson.projectName} World/`, item), { recursive: true }).catch(e => {})
+	for (const item of [
+		'advancements',
+		'playerdata',
+		'poi',
+		'stats',
+		'level.dat_old',
+		'session.lock',
+	]) {
+		await fs
+			.rm(pathjs.join(`./.temp/${packageJson.projectName} World/`, item), { recursive: true })
+			.catch(e => {})
 	}
 	await cleanupDirTree(`./.temp/${packageJson.projectName} World/`, '.ajmodel')
 	// Zip the world
 	_7z(`./dist/${packageJson.projectName}.zip`, `./.temp/${packageJson.projectName} World/`)
 	// Remove .temp folder
 	await fs.rm('./.temp/', { recursive: true }).catch(e => {})
+
+	term.green('Done!\n')
+	process.exit(0)
 }
 
 main()
