@@ -1,11 +1,11 @@
 import * as pathjs from 'path'
 import * as fs from 'fs/promises'
 import { terminal as term } from 'terminal-kit'
+import { execSync } from 'child_process'
 import { IPackage } from './types'
 
-const packageScript = 'cd "$PATH" && mcb -w-alt -debounce-time 100'
+const packageScript = 'cd "$PATH" && mcb build'
 const DATAPACKS_PATH = './datapacks/'
-const DATAPACK_TEMPLATE_PATH = './.tools/datapack_template/'
 const PACKAGE_PATH = './package.json'
 
 async function getResponse(prompt: string): Promise<string> {
@@ -41,9 +41,7 @@ async function main() {
 	const datapackName = await getResponse('Datapack Name (eg. "Project Name"): ')
 	const datapackDescription = await getResponse('Datapack Description (eg. "A cool datapack"): ')
 
-	await fs.cp(DATAPACK_TEMPLATE_PATH, pathjs.join(DATAPACKS_PATH, datapackName), {
-		recursive: true,
-	})
+	execSync(`mcb create "${pathjs.join(DATAPACKS_PATH, datapackName)}"`)
 
 	await modifyPackage(datapackId, datapackName)
 	await modifyMcMeta(datapackName, datapackDescription)
