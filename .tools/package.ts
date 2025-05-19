@@ -58,7 +58,7 @@ async function main() {
 				.then(() => true)
 				.catch(() => false)
 		) {
-			execSync(`cd "${path}"; mcb -offline -build -clean`, { shell: 'powershell.exe' })
+			execSync(`cd "${path}"; mcb build`, { shell: 'powershell.exe' })
 			// Remove MC-Build project files
 			for (const item of ['src/', '.mcproject', 'config.js', 'config.json']) {
 				await fs.rm(pathjs.join(path, item), { recursive: true }).catch(e => {})
